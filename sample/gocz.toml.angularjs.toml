@@ -1,0 +1,85 @@
+[commit]
+template='''{{.type}}{{if .scope}}({{.scope}}){{end}}: {{.shortDesc}} {{if .longerDesc}}
+
+{{.longerDesc}} {{end}} {{if and .issueConfirm .issueInfo}}
+
+{{.issueInfo}} {{end}} {{if and .breakingChangeConfirm .breakingChangeInfo}}
+
+BREAKING CHANGE: {{.breakingChangeInfo}} {{end}}'''
+
+# use angular style, example like below:
+#<type>(<scope>): <subject>
+#// blank line
+#<body>
+#// blank line
+#<footer>
+
+    [[commit.question]] # q1
+    key = "type"
+    type = "select"
+    message = "Select the type of change that you're committing:"
+    # must choose from below, do not need default
+    option = [
+        {hint="feat:     A new feature", value="feat"},
+        {hint="fix:      A bug fix",     value="fix"},
+        {hint="docs:     Documentation only changes", value="docs"},
+        {hint="style:    Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)", value="style"},
+        {hint="refactor: A code change that neither fixes a bug nor adds a feature", value="refactor"},
+        {hint="perf:     A code change that improves performance", value="perf"},
+        {hint="test:     Adding missing tests or correcting existing tests", value="test"},
+    ]
+
+    [[commit.question]] # q2
+    key = "scope"
+    type = "input"
+    message = "What is the scope of this change:"
+    help = "(e.g. component or file name)"
+    default = ""
+
+    [[commit.question]] # q3
+    key = "shortDesc"
+    type = "input"
+    message = "Write a short, imperative tense description of the change:"
+    default = ""
+    valid = "required"
+
+    [[commit.question]] # q4
+    key = "longerDesc"
+    type = "input"
+    message = "Provide a longer description of the change: (press enter to skip)"
+    help = "I couldn't come up with one."
+    default = ""
+
+    [[commit.question]] # q5
+    key = "breakingChangeConfirm"
+    type = "confirm"
+    message = "Are there any breaking changes?"
+    default = false
+
+    [[commit.question]] # q6
+    key = "breakingChangeInfo"
+    type = "input"
+    message = "Describe the breaking changes:"
+    help = "I couldn't come up with one."
+    default = ""
+    skip_if_not_confirm = "breakingChangeConfirm"
+
+    [[commit.question]] # q7
+    key = "issueConfirm"
+    type = "confirm"
+    message = "Does this change affect any open issues?"
+    default = false
+
+    [[commit.question]] # q8
+    key = "issueInfo"
+    type = "input"
+    message = "Add issue references (e.g. \"fix #123\", \"re #123\".):"
+    help = "I couldn't come up with one."
+    default = ""
+    skip_if_not_confirm ="issueConfirm"
+
+
+[convertor]
+enable = true
+    [convertor.changelog]
+    output = "CHANGELOG.md"
