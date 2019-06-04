@@ -10,6 +10,14 @@ func setupGoczCommit() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "cz(commitizen)",
 	}
+	commitArgs := commit.NewDefaultArgs()
+	cmd.Flags().BoolVarP(&commitArgs.Quiet, "quiet", "q", commitArgs.Quiet, "suppress summary after successful commit")
+	cmd.Flags().BoolVarP(&commitArgs.Verbose, "verbose", "v", commitArgs.Verbose, "show diff in commit message template")
+	cmd.Flags().StringVar(&commitArgs.Author, "author", commitArgs.Author, "override author for commit")
+	cmd.Flags().StringVar(&commitArgs.Date, "date", commitArgs.Date, "override date for commit")
+	cmd.Flags().BoolVarP(&commitArgs.All, "all", "a", commitArgs.All, "commit all changed files")
+	cmd.Flags().BoolVar(&commitArgs.Amend, "amend", commitArgs.Amend, "amend previous commit")
+
 	cmd.RunE = func(cobraCmd *cobra.Command, args []string) (err error) {
 		// setup config
 		cfg := config.New()
@@ -25,7 +33,6 @@ func setupGoczCommit() *cobra.Command {
 		if _, err = cmt.Read(); err != nil {
 			return err
 		}
-		commitArgs := commit.NewDefaultArgs()
 		if err = cmt.Execute(commitArgs); err != nil {
 			return err
 		}

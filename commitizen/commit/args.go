@@ -56,7 +56,12 @@ type Args struct {
 
 func NewDefaultArgs() *Args {
 	return &Args{
-		Quiet: false,
+		Quiet:   false,
+		Verbose: false,
+		Author:  "",
+		Date:    "",
+		All:     false,
+		Amend:   false,
 	}
 }
 
